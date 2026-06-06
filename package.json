@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=22 <23"
+    "node": ">=22"
   },
   "scripts": {
     "validate": "node scripts/validate.mjs",
@@ -59,13 +59,16 @@
     "lint": "eslint .",
     "format:check": "prettier --check .",
     "check": "npm run lint && npm run format:check && npm run pipeline:check",
-    "test": "node --test tests/*.test.mjs"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@vitest/coverage-v8": "^4.1.8",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "eslint": "^10.4.1",
-    "prettier": "^3.8.3"
+    "prettier": "^3.8.3",
+    "vitest": "^4.1.8"
   }
 }
