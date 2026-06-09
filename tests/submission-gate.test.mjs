@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import path from "node:path";
 import { describe, test } from "vitest";
 import {
   loadNativeSnapshot,
@@ -115,10 +115,39 @@ describe("Metagraphed submission gate policy", () => {
     assert.equal(scope.errors[0].category, "generated-artifact-tampering");
   });
 
-  test("routes mixed direct candidate PRs through the UGC gate", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "metagraphed-route-"));
+  test("routes tampered direct submissions through the UGC preflight", () => {
+    const tmp = mkdtempSync(path.join(tmpdir(), "metagraphed-route-"));
     try {
-      const changedFiles = join(tmp, "changed-files.txt");
+      const changedFilesPath = path.join(tmp, "changed-files.txt");
+      const outputPath = path.join(tmp, "github-output.txt");
+      writeFileSync(
+        changedFilesPath,
+        [
+          "registry/candidates/community/allways-docs-example.json",
+          "package.json",
+          "scripts/submission-pr.mjs",
+        ].join("\n"),
+      );
+
+      execFileSync(
+        process.execPath,
+        ["scripts/ci-validate-route.mjs", "--changed-files", changedFilesPath],
+        {
+          env: { ...process.env, GITHUB_OUTPUT: outputPath },
+          stdio: "pipe",
+        },
+      );
+
+      assert.match(readFileSync(outputPath, "utf8"), /^mode=ugc$/m);
+    } finally {
+      rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
+  test("routes mixed direct candidate PRs through the UGC gate", () => {
+    const tmp = mkdtempSync(path.join(tmpdir(), "metagraphed-route-"));
+    try {
+      const changedFiles = path.join(tmp, "changed-files.txt");
       writeFileSync(
         changedFiles,
         [
