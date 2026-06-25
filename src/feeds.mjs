@@ -257,7 +257,10 @@ function rssFeed(meta, items) {
       ].join("\n"),
     )
     .join("\n");
-  return [
+  // Terminate with a trailing newline like jsonFeed. The filter drops the empty
+  // body line when a feed has no items; that same filter also stripped the old
+  // trailing "" that used to add this newline, so append it explicitly.
+  const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
     "  <channel>",
@@ -269,10 +272,10 @@ function rssFeed(meta, items) {
     body,
     "  </channel>",
     "</rss>",
-    "",
   ]
     .filter((line) => line !== "")
     .join("\n");
+  return `${xml}\n`;
 }
 
 function atomFeed(meta, items) {
@@ -290,7 +293,10 @@ function atomFeed(meta, items) {
       ].join("\n"),
     )
     .join("\n");
-  return [
+  // Terminate with a trailing newline like jsonFeed (see rssFeed) — the filter
+  // drops the empty body line when a feed has no items, and stripped the old
+  // trailing "" that used to add this newline.
+  const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<feed xmlns="http://www.w3.org/2005/Atom">',
     `  <title>${escapeXml(meta.title)}</title>`,
@@ -301,10 +307,10 @@ function atomFeed(meta, items) {
     `  <subtitle>${escapeXml(meta.description)}</subtitle>`,
     body,
     "</feed>",
-    "",
   ]
     .filter((line) => line !== "")
     .join("\n");
+  return `${xml}\n`;
 }
 
 const SERIALIZERS = { json: jsonFeed, rss: rssFeed, atom: atomFeed };

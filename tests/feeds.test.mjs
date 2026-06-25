@@ -295,6 +295,26 @@ describe("feeds — serializers", () => {
     assert.ok((xml.match(/<entry>/g) || []).length === items.length);
   });
 
+  test("every serializer ends with exactly one trailing newline", () => {
+    for (const serialize of [jsonFeed, rssFeed, atomFeed]) {
+      const out = serialize(meta, items);
+      assert.ok(out.endsWith("\n"), `${serialize.name} ends with a newline`);
+      assert.ok(
+        !out.endsWith("\n\n"),
+        `${serialize.name} has no doubled trailing newline`,
+      );
+    }
+  });
+
+  test("an empty feed terminates cleanly with no blank body line", () => {
+    // No items → the empty body line is filtered out, so the closing tags abut
+    // the header and the document still ends with a single trailing newline.
+    const rss = rssFeed(meta, []);
+    assert.ok(!rss.includes("\n\n"));
+    assert.match(rss, /<\/lastBuildDate>\n {2}<\/channel>/);
+    assert.ok(rss.endsWith("</rss>\n"));
+  });
+
   test("escapeXml neutralizes markup + strips control chars", () => {
     assert.equal(
       escapeXml(`<a href="x">&'</a>`),
