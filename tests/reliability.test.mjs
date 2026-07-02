@@ -58,12 +58,16 @@ describe("scoreFromStats", () => {
   });
 
   test("does not penalize latency at or under the 500ms free threshold", () => {
-    const stats = scoreFromStats({
-      samples: 100,
-      okCount: 100,
-      avgLatencyMs: 500,
-    });
-    assert.equal(stats.score, 100);
+    // Exactly at the threshold and below it both incur zero penalty (the
+    // Math.max(0, …) arm), so a perfect uptime stays a perfect 100.
+    for (const avgLatencyMs of [499, 500]) {
+      const stats = scoreFromStats({
+        samples: 100,
+        okCount: 100,
+        avgLatencyMs,
+      });
+      assert.equal(stats.score, 100, `${avgLatencyMs}ms should not penalize`);
+    }
   });
 
   test("caps the latency penalty at 15 points", () => {
@@ -98,6 +102,22 @@ describe("scoreFromStats", () => {
     assert.equal(grade(92), "C");
     assert.equal(grade(80), "D");
     assert.equal(grade(50), "F");
+  });
+
+  test("assigns the grade exactly at and just below each cutoff", () => {
+    // gradeFor is a public, documented contract (A>=99, B>=95, C>=90, D>=75,
+    // else F); pin both sides of every boundary so a threshold change fails here.
+    const grade = (score) =>
+      scoreFromStats({ samples: 100, okCount: score, avgLatencyMs: null })
+        .grade;
+    assert.equal(grade(99), "A");
+    assert.equal(grade(98), "B");
+    assert.equal(grade(95), "B");
+    assert.equal(grade(94), "C");
+    assert.equal(grade(90), "C");
+    assert.equal(grade(89), "D");
+    assert.equal(grade(75), "D");
+    assert.equal(grade(74), "F");
   });
 });
 
