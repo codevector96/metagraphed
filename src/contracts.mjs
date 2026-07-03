@@ -1371,7 +1371,7 @@ export const API_ROUTES = [
     "List public-safe subnet profiles and completeness scores.",
     "standard",
     ["profiles", "subnets"],
-    listQuery("profiles"),
+    csvListQuery("profiles"),
   ),
   route(
     "subnet-profile",
@@ -1423,7 +1423,7 @@ export const API_ROUTES = [
     "List curated public surfaces.",
     "standard",
     ["surfaces"],
-    listQuery("curated-surfaces"),
+    csvListQuery("curated-surfaces"),
   ),
   route(
     "subnet-surfaces",
@@ -1433,7 +1433,7 @@ export const API_ROUTES = [
     "List curated public surfaces for one subnet.",
     "standard",
     ["surfaces", "subnets"],
-    listQuery("curated-surfaces", { exclude: ["netuid"] }),
+    csvListQuery("curated-surfaces", { exclude: ["netuid"] }),
     [{ name: "netuid", schema: { type: "integer", minimum: 0 } }],
   ),
   route(
@@ -1444,7 +1444,7 @@ export const API_ROUTES = [
     "List generalized endpoint resources and monitored public surfaces.",
     "short",
     ["endpoints"],
-    listQuery("endpoints"),
+    csvListQuery("endpoints"),
   ),
   route(
     "subnet-endpoints",
@@ -1454,7 +1454,7 @@ export const API_ROUTES = [
     "List generalized endpoint resources for one subnet.",
     "short",
     ["endpoints", "subnets"],
-    listQuery("endpoints", { exclude: ["netuid"] }),
+    csvListQuery("endpoints", { exclude: ["netuid"] }),
     [{ name: "netuid", schema: { type: "integer", minimum: 0 } }],
   ),
   route(
@@ -1465,7 +1465,7 @@ export const API_ROUTES = [
     "List unpromoted candidate surfaces.",
     "standard",
     ["candidates"],
-    listQuery("candidates"),
+    csvListQuery("candidates"),
   ),
   route(
     "subnet-candidates",
@@ -1475,7 +1475,7 @@ export const API_ROUTES = [
     "List unpromoted candidate surfaces for one subnet.",
     "standard",
     ["candidates", "subnets"],
-    listQuery("candidates", { exclude: ["netuid"] }),
+    csvListQuery("candidates", { exclude: ["netuid"] }),
     [{ name: "netuid", schema: { type: "integer", minimum: 0 } }],
   ),
   route(
@@ -1507,7 +1507,7 @@ export const API_ROUTES = [
     "List endpoint resources for one provider or operator.",
     "short",
     ["providers", "endpoints"],
-    listQuery("endpoints", { exclude: ["provider"] }),
+    csvListQuery("endpoints", { exclude: ["provider"] }),
     [{ name: "slug", schema: { type: "string", pattern: "^[a-z0-9-]+$" } }],
   ),
   route(
@@ -1527,7 +1527,7 @@ export const API_ROUTES = [
     "Fetch the machine-usable coverage depth scorecard and ranked enrichment queue.",
     "standard",
     ["registry", "review", "api-dx"],
-    listQuery("coverage-depth"),
+    csvListQuery("coverage-depth"),
   ),
   route(
     "economics",
@@ -1537,7 +1537,7 @@ export const API_ROUTES = [
     "List per-subnet validator and economic metrics (counts, stake, registration cost, alpha price, alpha market-cap proxy, alpha FDV proxy, emission share, and registration block height). Default order is emission share descending. Filter by netuid/registration_allowed, search by name/slug, and sort with `sort=<field>&order=asc|desc` — the two are separate parameters (e.g. `?sort=alpha_market_cap_tao&order=desc` or `?sort=block&order=asc`), NOT a combined `field:desc` token.",
     "standard",
     ["subnets"],
-    listQuery("economics"),
+    csvListQuery("economics"),
   ),
   route(
     "economics-trends",

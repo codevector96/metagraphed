@@ -8159,6 +8159,8 @@ export interface operations {
                 sort?: "confidence" | "id" | "kind" | "name" | "netuid" | "provider" | "state";
                 /** @description Sort direction for `sort`: `asc` or `desc` (default `desc`). This is a separate parameter from `sort` — e.g. `?sort=emission_share&order=desc`. */
                 order?: "asc" | "desc";
+                /** @description Response format override. Use `csv` to download the transformed list as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path?: never;
@@ -8166,7 +8168,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or the transformed list as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -8227,6 +8229,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["CandidatesArtifact"];
                     };
+                    /**
+                     * @example netuid,name
+                     *     7,Allways
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -9966,6 +9973,8 @@ export interface operations {
                 sort?: "agent_status" | "blocker_level" | "name" | "netuid" | "priority_score" | "score" | "tier";
                 /** @description Sort direction for `sort`: `asc` or `desc` (default `desc`). This is a separate parameter from `sort` — e.g. `?sort=emission_share&order=desc`. */
                 order?: "asc" | "desc";
+                /** @description Response format override. Use `csv` to download the transformed list as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path?: never;
@@ -9973,7 +9982,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or the transformed list as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -10101,6 +10110,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["CoverageDepthArtifact"];
                     };
+                    /**
+                     * @example netuid,name
+                     *     7,Allways
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -10298,6 +10312,8 @@ export interface operations {
                 sort?: "alpha_fdv_tao" | "alpha_market_cap_tao" | "alpha_price_tao" | "block" | "emission_share" | "max_stake_tao" | "max_uids" | "max_validators" | "miner_count" | "miner_readiness" | "name" | "netuid" | "open_slots" | "registration_cost_tao" | "subnet_volume_tao" | "total_stake_tao" | "validator_count";
                 /** @description Sort direction for `sort`: `asc` or `desc` (default `desc`). This is a separate parameter from `sort` — e.g. `?sort=emission_share&order=desc`. */
                 order?: "asc" | "desc";
+                /** @description Response format override. Use `csv` to download the transformed list as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path?: never;
@@ -10305,7 +10321,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or the transformed list as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -10386,6 +10402,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["EconomicsArtifact"];
                     };
+                    /**
+                     * @example netuid,name
+                     *     7,Allways
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -10889,6 +10910,8 @@ export interface operations {
                 sort?: "kind" | "last_checked" | "latency_ms" | "layer" | "netuid" | "pool_eligible" | "provider" | "publication_state" | "score" | "status";
                 /** @description Sort direction for `sort`: `asc` or `desc` (default `desc`). This is a separate parameter from `sort` — e.g. `?sort=emission_share&order=desc`. */
                 order?: "asc" | "desc";
+                /** @description Response format override. Use `csv` to download the transformed list as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path?: never;
@@ -10896,7 +10919,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or the transformed list as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -10982,6 +11005,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["EndpointsArtifact"];
                     };
+                    /**
+                     * @example netuid,name
+                     *     7,Allways
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -12650,6 +12678,8 @@ export interface operations {
                 sort?: "candidate_count" | "completeness_score" | "curation_level" | "interface_count" | "missing_critical_count" | "name" | "netuid" | "operational_interface_count" | "profile_level" | "review_state";
                 /** @description Sort direction for `sort`: `asc` or `desc` (default `desc`). This is a separate parameter from `sort` — e.g. `?sort=emission_share&order=desc`. */
                 order?: "asc" | "desc";
+                /** @description Response format override. Use `csv` to download the transformed list as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path?: never;
@@ -12657,7 +12687,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or the transformed list as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -12843,6 +12873,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["SubnetProfilesArtifact"];
                     };
+                    /**
+                     * @example netuid,name
+                     *     7,Allways
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -13160,6 +13195,8 @@ export interface operations {
                 sort?: "kind" | "last_checked" | "latency_ms" | "layer" | "netuid" | "pool_eligible" | "provider" | "publication_state" | "score" | "status";
                 /** @description Sort direction for `sort`: `asc` or `desc` (default `desc`). This is a separate parameter from `sort` — e.g. `?sort=emission_share&order=desc`. */
                 order?: "asc" | "desc";
+                /** @description Response format override. Use `csv` to download the transformed list as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path: {
@@ -13169,7 +13206,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or the transformed list as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -13261,6 +13298,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["ProviderEndpointsArtifact"];
                     };
+                    /**
+                     * @example netuid,name
+                     *     7,Allways
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -16149,6 +16191,8 @@ export interface operations {
                 sort?: "confidence" | "id" | "kind" | "name" | "netuid" | "provider" | "state";
                 /** @description Sort direction for `sort`: `asc` or `desc` (default `desc`). This is a separate parameter from `sort` — e.g. `?sort=emission_share&order=desc`. */
                 order?: "asc" | "desc";
+                /** @description Response format override. Use `csv` to download the transformed list as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path: {
@@ -16158,7 +16202,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or the transformed list as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -16219,6 +16263,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["SubnetCandidatesArtifact"];
                     };
+                    /**
+                     * @example netuid,name
+                     *     7,Allways
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -16573,6 +16622,8 @@ export interface operations {
                 sort?: "kind" | "last_checked" | "latency_ms" | "layer" | "netuid" | "pool_eligible" | "provider" | "publication_state" | "score" | "status";
                 /** @description Sort direction for `sort`: `asc` or `desc` (default `desc`). This is a separate parameter from `sort` — e.g. `?sort=emission_share&order=desc`. */
                 order?: "asc" | "desc";
+                /** @description Response format override. Use `csv` to download the transformed list as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path: {
@@ -16582,7 +16633,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or the transformed list as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -16671,6 +16722,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["SubnetEndpointsArtifact"];
                     };
+                    /**
+                     * @example netuid,name
+                     *     7,Allways
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -19207,6 +19263,8 @@ export interface operations {
                 sort?: "id" | "kind" | "name" | "netuid" | "provider";
                 /** @description Sort direction for `sort`: `asc` or `desc` (default `desc`). This is a separate parameter from `sort` — e.g. `?sort=emission_share&order=desc`. */
                 order?: "asc" | "desc";
+                /** @description Response format override. Use `csv` to download the transformed list as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path: {
@@ -19216,7 +19274,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or the transformed list as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -19274,6 +19332,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["SubnetSurfacesArtifact"];
                     };
+                    /**
+                     * @example netuid,name
+                     *     7,Allways
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -20099,6 +20162,8 @@ export interface operations {
                 sort?: "id" | "kind" | "name" | "netuid" | "provider";
                 /** @description Sort direction for `sort`: `asc` or `desc` (default `desc`). This is a separate parameter from `sort` — e.g. `?sort=emission_share&order=desc`. */
                 order?: "asc" | "desc";
+                /** @description Response format override. Use `csv` to download the transformed list as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path?: never;
@@ -20106,7 +20171,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or the transformed list as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -20164,6 +20229,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["SurfacesArtifact"];
                     };
+                    /**
+                     * @example netuid,name
+                     *     7,Allways
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */

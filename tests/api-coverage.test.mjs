@@ -970,8 +970,10 @@ describe("subnets CSV export", () => {
   });
 
   test("Accept: text/csv is ignored for collection routes without CSV contracts", async () => {
+    // /api/v1/providers is a list route that intentionally has no CSV contract,
+    // so content negotiation must fall through to the JSON envelope.
     const res = await handleRequest(
-      req("/api/v1/profiles?limit=1", {
+      req("/api/v1/providers?limit=1", {
         headers: { accept: "text/csv" },
       }),
       createLocalArtifactEnv(),
@@ -982,7 +984,7 @@ describe("subnets CSV export", () => {
 
     const body = await res.json();
     assert.equal(body.ok, true);
-    assert.equal(Array.isArray(body.data.profiles), true);
+    assert.equal(Array.isArray(body.data.providers), true);
   });
 
   test("empty projected CSV exports retain the requested header row", async () => {
@@ -1108,6 +1110,111 @@ describe("review enrichment list CSV export", () => {
     assert.ok(rows.length > 0);
     assert.ok(rows.every((row) => row.lane === "direct-submission"));
     assert.ok(rows.every((row) => row.priority_score !== ""));
+  });
+});
+
+// --- registry list CSV export (#2521-#2526) -----------------------------------
+describe("registry list CSV export", () => {
+  const CSV_ROUTES = [
+    "economics",
+    "surfaces",
+    "subnet-surfaces",
+    "endpoints",
+    "subnet-endpoints",
+    "provider-endpoints",
+    "candidates",
+    "subnet-candidates",
+    "profiles",
+    "coverage-depth",
+  ];
+
+  test("every wired registry route advertises the CSV contract", () => {
+    for (const id of CSV_ROUTES) {
+      const entry = API_ROUTES.find((route) => route.id === id);
+      assert.ok(entry, `route ${id} should exist`);
+      assert.equal(entry.csv_response, true, `${id} should set csv_response`);
+      const formatParam = (entry.query_parameters || []).find(
+        (param) => param.name === "format",
+      );
+      assert.ok(formatParam, `${id} should expose a format parameter`);
+      assert.deepEqual(formatParam.schema.enum, ["json", "csv"]);
+    }
+  });
+
+  test("list routes without a CSV contract stay JSON-only", () => {
+    for (const id of ["providers", "rpc-endpoints", "source-snapshots"]) {
+      const entry = API_ROUTES.find((route) => route.id === id);
+      assert.ok(entry, `route ${id} should exist`);
+      assert.notEqual(entry.csv_response, true, `${id} must stay JSON-only`);
+    }
+  });
+
+  // Each top-level route resolves a real local artifact, so ?format=csv returns
+  // a text/csv attachment named after the route id with a header row.
+  for (const [path, filename] of [
+    ["/api/v1/economics", "economics.csv"],
+    ["/api/v1/surfaces", "surfaces.csv"],
+    ["/api/v1/endpoints", "endpoints.csv"],
+    ["/api/v1/candidates", "candidates.csv"],
+    ["/api/v1/profiles", "profiles.csv"],
+    ["/api/v1/coverage-depth", "coverage-depth.csv"],
+  ]) {
+    test(`${path}?format=csv returns a named text/csv download`, async () => {
+      const res = await handleRequest(
+        req(`${path}?format=csv&limit=3`),
+        createLocalArtifactEnv(),
+        {},
+      );
+      assert.equal(res.status, 200);
+      assert.match(res.headers.get("content-type"), /^text\/csv/);
+      assert.equal(
+        res.headers.get("content-disposition"),
+        `attachment; filename="${filename}"`,
+      );
+      const [header] = (await res.text()).split("\r\n");
+      assert.ok(header.length > 0, "CSV must include a header row");
+      assert.ok(header.includes(","), "header should list multiple columns");
+    });
+  }
+
+  test("subnet-scoped surfaces export CSV for one netuid", async () => {
+    const res = await handleRequest(
+      req("/api/v1/subnets/0/surfaces?format=csv"),
+      createLocalArtifactEnv(),
+      {},
+    );
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get("content-type"), /^text\/csv/);
+    assert.equal(
+      res.headers.get("content-disposition"),
+      'attachment; filename="subnet-surfaces.csv"',
+    );
+  });
+
+  test("Accept: text/csv negotiates CSV on a registry route", async () => {
+    const res = await handleRequest(
+      req("/api/v1/economics?limit=1", { headers: { accept: "text/csv" } }),
+      createLocalArtifactEnv(),
+      {},
+    );
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get("content-type"), /^text\/csv/);
+  });
+
+  test("?format=json keeps the JSON envelope on a registry route", async () => {
+    const res = await handleRequest(
+      req("/api/v1/economics?format=json&limit=1", {
+        headers: { accept: "text/csv" },
+      }),
+      createLocalArtifactEnv(),
+      {},
+    );
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get("content-type"), /^application\/json/);
+    const body = await res.json();
+    assert.equal(body.ok, true);
+    // The economics collection projects onto the shared `subnets` data key.
+    assert.equal(Array.isArray(body.data.subnets), true);
   });
 });
 
