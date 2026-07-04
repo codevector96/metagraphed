@@ -360,7 +360,9 @@ test("loadStagedEvents leaves the file intact if a D1 batch throws (no drop on c
       },
     },
   };
-  await assert.rejects(loadStagedEvents(env));
+  const r = await loadStagedEvents(env);
+  assert.equal(r.ok, false);
+  assert.equal(r.reason, "load_failed");
   assert.deepEqual(puts, [], "no remainder written on failure");
   assert.deepEqual(
     deleted,

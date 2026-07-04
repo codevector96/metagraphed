@@ -137,6 +137,12 @@ async function signedExtrinsicEnvelope(signingKey, rows) {
   };
 }
 
+async function runStagedBatches(db, statements, statementsPerBatch) {
+  for (let i = 0; i < statements.length; i += statementsPerBatch) {
+    await db.batch(statements.slice(i, i + statementsPerBatch));
+  }
+}
+
 function utf8Bytes(value) {
   return new TextEncoder().encode(value);
 }
@@ -530,8 +536,10 @@ export async function loadStagedEvents(env) {
       : [];
   const statements = eventInsertStatements(db, batch);
   const STMTS_PER_BATCH = 50;
-  for (let i = 0; i < statements.length; i += STMTS_PER_BATCH) {
-    await db.batch(statements.slice(i, i + STMTS_PER_BATCH));
+  try {
+    await runStagedBatches(db, statements, STMTS_PER_BATCH);
+  } catch {
+    return { ok: false, reason: "load_failed" };
   }
   if (remainder.length) {
     await bucket.put(
@@ -608,8 +616,10 @@ export async function loadStagedBlocks(env) {
       : [];
   const statements = blockInsertStatements(db, batch);
   const STMTS_PER_BATCH = 50;
-  for (let i = 0; i < statements.length; i += STMTS_PER_BATCH) {
-    await db.batch(statements.slice(i, i + STMTS_PER_BATCH));
+  try {
+    await runStagedBatches(db, statements, STMTS_PER_BATCH);
+  } catch {
+    return { ok: false, reason: "load_failed" };
   }
   if (remainder.length) {
     await bucket.put(
@@ -688,8 +698,10 @@ export async function loadStagedExtrinsics(env) {
       : [];
   const statements = extrinsicInsertStatements(db, batch);
   const STMTS_PER_BATCH = 50;
-  for (let i = 0; i < statements.length; i += STMTS_PER_BATCH) {
-    await db.batch(statements.slice(i, i + STMTS_PER_BATCH));
+  try {
+    await runStagedBatches(db, statements, STMTS_PER_BATCH);
+  } catch {
+    return { ok: false, reason: "load_failed" };
   }
   if (remainder.length) {
     await bucket.put(

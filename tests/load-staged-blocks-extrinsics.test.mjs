@@ -310,7 +310,9 @@ for (const c of cases) {
       delete: async (k) => deleted.push(k),
       batchThrows: true,
     });
-    await assert.rejects(c.load(env));
+    const r = await c.load(env);
+    assert.equal(r.ok, false);
+    assert.equal(r.reason, "load_failed");
     assert.deepEqual(puts, [], "no remainder written on failure");
     assert.deepEqual(deleted, [], "object NOT deleted — re-drains next tick");
   });
