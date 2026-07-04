@@ -79,7 +79,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Fetch the paginated first-party chain-event history for one account (hotkey or coldkey), newest first. Optional ?kind= filter, ?netuid= to scope to one subnet, and ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging (#1851). */
+        /** Fetch the paginated first-party chain-event history for one account (hotkey or coldkey), newest first. Optional ?kind= filter, ?netuid= to scope to one subnet, and ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging (#1851). Pass ?format=csv to download the filtered event rows as CSV. */
         get: operations["accountEvents"];
         put?: never;
         post?: never;
@@ -96,7 +96,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Fetch the extrinsics this account signed (matched by signer), newest first, computed live from the extrinsics D1 tier. Optional ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging. */
+        /** Fetch the extrinsics this account signed (matched by signer), newest first, computed live from the extrinsics D1 tier. Optional ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging. Pass ?format=csv to download the filtered extrinsic rows as CSV. */
         get: operations["accountExtrinsics"];
         put?: never;
         post?: never;
@@ -164,7 +164,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Fetch the native-TAO Balances.Transfer feed for one account, newest first, computed live from the account_events D1 tier. ?direction=all|sent|received; optional ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging. */
+        /** Fetch the native-TAO Balances.Transfer feed for one account, newest first, computed live from the account_events D1 tier. ?direction=all|sent|received; optional ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging. Pass ?format=csv to download the filtered transfer rows as CSV. */
         get: operations["accountTransfers"];
         put?: never;
         post?: never;
@@ -1490,7 +1490,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Fetch the first-party chain-event stream for one subnet (registrations, stake, weights, axon, delegation, lifecycle, transfers), newest first, from the account_events D1 tier filtered by netuid. Optional ?kind= filter and ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset. */
+        /** Fetch the first-party chain-event stream for one subnet (registrations, stake, weights, axon, delegation, lifecycle, transfers), newest first, from the account_events D1 tier filtered by netuid. Optional ?kind= filter and ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset. Pass ?format=csv to download the filtered event rows as CSV. */
         get: operations["subnetEvents"];
         put?: never;
         post?: never;
@@ -6619,6 +6619,8 @@ export interface operations {
                 limit?: number;
                 offset?: number;
                 cursor?: string;
+                /** @description Response format override. Use `csv` to download the route rows as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path: {
@@ -6628,7 +6630,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or route rows as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -6682,6 +6684,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["AccountEventsArtifact"];
                     };
+                    /**
+                     * @example block_number,event_index,event_kind,hotkey,coldkey,netuid,uid,amount_tao,alpha_amount,observed_at,extrinsic_index
+                     *     8454388,1,StakeAdded,5Hotkey,,7,3,1.5,,2026-07-03T00:00:00.000Z,2
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -6737,6 +6744,8 @@ export interface operations {
                 limit?: number;
                 offset?: number;
                 cursor?: string;
+                /** @description Response format override. Use `csv` to download the route rows as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path: {
@@ -6746,7 +6755,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or route rows as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -6800,6 +6809,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["AccountExtrinsicsArtifact"];
                     };
+                    /**
+                     * @example block_number,extrinsic_index,extrinsic_hash,signer,call_module,call_function,success,fee_tao,tip_tao,observed_at
+                     *     8454388,2,0xhash,5Signer,SubtensorModule,add_stake,true,0.0125,,2026-07-03T00:00:00.000Z
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -7211,6 +7225,8 @@ export interface operations {
                 limit?: number;
                 offset?: number;
                 cursor?: string;
+                /** @description Response format override. Use `csv` to download the route rows as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path: {
@@ -7220,7 +7236,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or route rows as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -7275,6 +7291,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["AccountTransfersArtifact"];
                     };
+                    /**
+                     * @example block_number,event_index,from,to,amount_tao,direction,observed_at
+                     *     8454388,1,5FromAddress,5ToAddress,4.2,sent,2026-07-03T00:00:00.000Z
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */
@@ -18130,6 +18151,8 @@ export interface operations {
                 block_end?: number;
                 limit?: number;
                 offset?: number;
+                /** @description Response format override. Use `csv` to download the route rows as text/csv; `json` keeps the default response envelope. */
+                format?: "json" | "csv";
             };
             header?: never;
             path: {
@@ -18139,7 +18162,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Canonical artifact wrapped in the Metagraphed API envelope. */
+            /** @description Canonical artifact wrapped in the Metagraphed API envelope, or route rows as text/csv when CSV is requested. */
             200: {
                 headers: {
                     "cache-control": components["headers"]["CacheControl"];
@@ -18193,6 +18216,11 @@ export interface operations {
                     "application/json": components["schemas"]["SuccessEnvelope"] & {
                         data?: components["schemas"]["SubnetEventsArtifact"];
                     };
+                    /**
+                     * @example block_number,event_index,event_kind,hotkey,coldkey,netuid,uid,amount_tao,alpha_amount,observed_at,extrinsic_index
+                     *     8454388,1,StakeAdded,5Hotkey,,7,3,1.5,,2026-07-03T00:00:00.000Z,2
+                     */
+                    "text/csv": string;
                 };
             };
             /** @description ETag matched and the cached response is still valid. */

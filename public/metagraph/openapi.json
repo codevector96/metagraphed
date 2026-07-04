@@ -17769,6 +17769,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "description": "Response format override. Use `csv` to download the route rows as text/csv; `json` keeps the default response envelope.",
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "enum": [
+                "json",
+                "csv"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -17830,9 +17843,15 @@
                     }
                   ]
                 }
+              },
+              "text/csv": {
+                "example": "block_number,event_index,event_kind,hotkey,coldkey,netuid,uid,amount_tao,alpha_amount,observed_at,extrinsic_index\r\n8454388,1,StakeAdded,5Hotkey,,7,3,1.5,,2026-07-03T00:00:00.000Z,2",
+                "schema": {
+                  "type": "string"
+                }
               }
             },
-            "description": "Canonical artifact wrapped in the Metagraphed API envelope.",
+            "description": "Canonical artifact wrapped in the Metagraphed API envelope, or route rows as text/csv when CSV is requested.",
             "headers": {
               "cache-control": {
                 "$ref": "#/components/headers/CacheControl"
@@ -17889,7 +17908,7 @@
             "description": "Unexpected backend error."
           }
         },
-        "summary": "Fetch the paginated first-party chain-event history for one account (hotkey or coldkey), newest first. Optional ?kind= filter, ?netuid= to scope to one subnet, and ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging (#1851).",
+        "summary": "Fetch the paginated first-party chain-event history for one account (hotkey or coldkey), newest first. Optional ?kind= filter, ?netuid= to scope to one subnet, and ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging (#1851). Pass ?format=csv to download the filtered event rows as CSV.",
         "tags": [
           "accounts",
           "analytics"
@@ -17950,6 +17969,19 @@
             "name": "cursor",
             "required": false,
             "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Response format override. Use `csv` to download the route rows as text/csv; `json` keeps the default response envelope.",
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "enum": [
+                "json",
+                "csv"
+              ],
               "type": "string"
             }
           }
@@ -18013,9 +18045,15 @@
                     }
                   ]
                 }
+              },
+              "text/csv": {
+                "example": "block_number,extrinsic_index,extrinsic_hash,signer,call_module,call_function,success,fee_tao,tip_tao,observed_at\r\n8454388,2,0xhash,5Signer,SubtensorModule,add_stake,true,0.0125,,2026-07-03T00:00:00.000Z",
+                "schema": {
+                  "type": "string"
+                }
               }
             },
-            "description": "Canonical artifact wrapped in the Metagraphed API envelope.",
+            "description": "Canonical artifact wrapped in the Metagraphed API envelope, or route rows as text/csv when CSV is requested.",
             "headers": {
               "cache-control": {
                 "$ref": "#/components/headers/CacheControl"
@@ -18072,7 +18110,7 @@
             "description": "Unexpected backend error."
           }
         },
-        "summary": "Fetch the extrinsics this account signed (matched by signer), newest first, computed live from the extrinsics D1 tier. Optional ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging.",
+        "summary": "Fetch the extrinsics this account signed (matched by signer), newest first, computed live from the extrinsics D1 tier. Optional ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging. Pass ?format=csv to download the filtered extrinsic rows as CSV.",
         "tags": [
           "accounts",
           "analytics"
@@ -18644,6 +18682,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "description": "Response format override. Use `csv` to download the route rows as text/csv; `json` keeps the default response envelope.",
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "enum": [
+                "json",
+                "csv"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -18706,9 +18757,15 @@
                     }
                   ]
                 }
+              },
+              "text/csv": {
+                "example": "block_number,event_index,from,to,amount_tao,direction,observed_at\r\n8454388,1,5FromAddress,5ToAddress,4.2,sent,2026-07-03T00:00:00.000Z",
+                "schema": {
+                  "type": "string"
+                }
               }
             },
-            "description": "Canonical artifact wrapped in the Metagraphed API envelope.",
+            "description": "Canonical artifact wrapped in the Metagraphed API envelope, or route rows as text/csv when CSV is requested.",
             "headers": {
               "cache-control": {
                 "$ref": "#/components/headers/CacheControl"
@@ -18765,7 +18822,7 @@
             "description": "Unexpected backend error."
           }
         },
-        "summary": "Fetch the native-TAO Balances.Transfer feed for one account, newest first, computed live from the account_events D1 tier. ?direction=all|sent|received; optional ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging.",
+        "summary": "Fetch the native-TAO Balances.Transfer feed for one account, newest first, computed live from the account_events D1 tier. ?direction=all|sent|received; optional ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset, or ?cursor= for stable keyset paging. Pass ?format=csv to download the filtered transfer rows as CSV.",
         "tags": [
           "accounts",
           "analytics"
@@ -35358,6 +35415,19 @@
               "minimum": 0,
               "type": "integer"
             }
+          },
+          {
+            "description": "Response format override. Use `csv` to download the route rows as text/csv; `json` keeps the default response envelope.",
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "enum": [
+                "json",
+                "csv"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -35419,9 +35489,15 @@
                     }
                   ]
                 }
+              },
+              "text/csv": {
+                "example": "block_number,event_index,event_kind,hotkey,coldkey,netuid,uid,amount_tao,alpha_amount,observed_at,extrinsic_index\r\n8454388,1,StakeAdded,5Hotkey,,7,3,1.5,,2026-07-03T00:00:00.000Z,2",
+                "schema": {
+                  "type": "string"
+                }
               }
             },
-            "description": "Canonical artifact wrapped in the Metagraphed API envelope.",
+            "description": "Canonical artifact wrapped in the Metagraphed API envelope, or route rows as text/csv when CSV is requested.",
             "headers": {
               "cache-control": {
                 "$ref": "#/components/headers/CacheControl"
@@ -35478,7 +35554,7 @@
             "description": "Unexpected backend error."
           }
         },
-        "summary": "Fetch the first-party chain-event stream for one subnet (registrations, stake, weights, axon, delegation, lifecycle, transfers), newest first, from the account_events D1 tier filtered by netuid. Optional ?kind= filter and ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset.",
+        "summary": "Fetch the first-party chain-event stream for one subnet (registrations, stake, weights, axon, delegation, lifecycle, transfers), newest first, from the account_events D1 tier filtered by netuid. Optional ?kind= filter and ?block_start/?block_end (block-height range); ?limit (<=1000) / ?offset. Pass ?format=csv to download the filtered event rows as CSV.",
         "tags": [
           "subnets",
           "analytics"
