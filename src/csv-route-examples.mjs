@@ -21,4 +21,9 @@ export const ROUTE_CSV_EXAMPLES = {
     "block_number,event_index,pallet,method,phase,extrinsic_index,observed_at",
     "8454388,3,Balances,Transfer,ApplyExtrinsic,2,1751500800000",
   ].join("\r\n"),
+  // The /chain/weights per-subnet weight-setting leaderboard rows.
+  "chain-weights": [
+    "netuid,distinct_setters,weight_sets,sets_per_setter",
+    "1,4,40,10",
+  ].join("\r\n"),
 };

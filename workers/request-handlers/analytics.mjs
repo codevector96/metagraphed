@@ -766,6 +766,16 @@ const CHAIN_STAKE_FLOW_CSV_COLUMNS = [
   "direction",
 ];
 
+// CSV column order for the /api/v1/chain/weights per-subnet leaderboard rows
+// (the row-shaped `subnets` array). The network rollup + intensity_distribution
+// stay JSON-only, mirroring chain-stake-flow.
+const CHAIN_WEIGHTS_CSV_COLUMNS = [
+  "netuid",
+  "distinct_setters",
+  "weight_sets",
+  "sets_per_setter",
+];
+
 // Daily network-activity aggregates over the first-party chain D1 tiers (#1987):
 // per-UTC-day extrinsic/event/block counts, success rate, and unique signers —
 // the foundation time-series for the block-explorer "network at a glance" view
@@ -1157,13 +1167,16 @@ export async function handleChainStakeFlow(request, env, url, ctx = {}) {
 // the edge cache and repeatedly force the network-wide aggregations, cache keyed on the analytics
 // cron freshness. The leaderboard is fixed to most-active-first (total WeightsSet events).
 export async function handleChainWeights(request, env, url, ctx = {}) {
-  const { label, days, error } = analyticsWindow(url, ["limit"]);
+  const { label, days, error } = analyticsWindow(url, ["limit", "format"]);
   if (error) return analyticsQueryError(error);
+  const formatError = validateFormatParam(url);
+  if (formatError) return analyticsQueryError(formatError);
   const { limit, error: limitError } = parseLimitParam(url, {
     defaultLimit: CHAIN_WEIGHTS_LIMIT_DEFAULT,
     maxLimit: CHAIN_WEIGHTS_LIMIT_MAX,
   });
   if (limitError) return analyticsQueryError(limitError);
+  const csv = csvRequested(url, request);
 
   const cacheRequest =
     request.method === "HEAD"
@@ -1180,6 +1193,17 @@ export async function handleChainWeights(request, env, url, ctx = {}) {
         windowDays: days,
         limit,
       });
+      // CSV exports the row-shaped per-subnet leaderboard; the network rollup +
+      // intensity_distribution stay JSON-only (mirrors chain-stake-flow).
+      if (csv) {
+        return csvResponse(
+          data.subnets,
+          "chain-weights",
+          "short",
+          cacheRequest,
+          CHAIN_WEIGHTS_CSV_COLUMNS,
+        );
+      }
       return envelopeResponse(
         cacheRequest,
         {
@@ -1193,7 +1217,7 @@ export async function handleChainWeights(request, env, url, ctx = {}) {
         "short",
       );
     },
-    canonicalAnalyticsCacheRoute(url, ["limit"]),
+    `${canonicalAnalyticsCacheRoute(url, ["limit"])}${csv ? "&format=csv" : ""}`,
   );
   return request.method === "HEAD"
     ? new Response(null, { status: response.status, headers: response.headers })
