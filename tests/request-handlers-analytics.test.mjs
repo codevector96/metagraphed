@@ -15,6 +15,7 @@ import {
   handleGlobalIncidents,
   handleChainActivity,
   handleChainCalls,
+  handleChainEventMix,
   handleChainSigners,
   handleChainFees,
   validateQueryParams,
@@ -1652,6 +1653,12 @@ describe("chain analytics ?format=csv export", () => {
       path: "/api/v1/chain/calls",
       handler: handleChainCalls,
       header: "call_module,count,share",
+    },
+    {
+      name: "chain-event-mix",
+      path: "/api/v1/chain/event-mix",
+      handler: handleChainEventMix,
+      header: "event_kind,count,share",
     },
     {
       name: "chain-signers",

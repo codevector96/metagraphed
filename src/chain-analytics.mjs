@@ -157,6 +157,40 @@ export function buildChainCalls({
   };
 }
 
+// Windowed decoded-event mix: the account_events event_kind distribution over
+// the window (count + share of all decoded events) — the network-wide companion
+// to the per-subnet event-summary. `rows` is the GROUP BY event_kind result
+// (one row per kind, ordered by count desc); `total` is the full-window event
+// count read separately so a truncated tail never skews the shares.
+export function buildChainEventMix({
+  window,
+  observedAt = null,
+  total = 0,
+  rows = [],
+}) {
+  const totalEvents = toCount(total);
+  const kinds = (Array.isArray(rows) ? rows : [])
+    .filter(
+      (r) => r && typeof r.event_kind === "string" && r.event_kind.length > 0,
+    )
+    .map((r) => {
+      const count = toCount(r.count);
+      return {
+        event_kind: r.event_kind,
+        count,
+        share: totalEvents > 0 ? round4(count / totalEvents) : null,
+      };
+    });
+  return {
+    schema_version: 1,
+    window,
+    observed_at: observedAt,
+    total_events: totalEvents,
+    distinct_kinds: kinds.length,
+    kinds,
+  };
+}
+
 // Windowed most-active-account leaderboard (#1990): signers ranked by extrinsic
 // count over the window, with their total fees/tips and newest signed block.
 export function buildChainSigners({
