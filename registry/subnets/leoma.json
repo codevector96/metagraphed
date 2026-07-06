@@ -34,6 +34,46 @@
         "https://api.leoma.ai/openapi.json"
       ],
       "url": "https://api.leoma.ai/health"
+    },
+    {
+      "auth_required": false,
+      "authority": "community",
+      "id": "sn-99-leoma-openapi",
+      "kind": "openapi",
+      "name": "Leoma API OpenAPI schema",
+      "notes": "Machine-readable OpenAPI schema (title: Leoma API) for the SN99 Leoma validator API on the project's own api.leoma.ai host; documents the public /health liveness route and the /miners/* miner-registry routes. Served from the official RendixNetwork/leoma API.",
+      "provider": "leoma",
+      "public_safe": true,
+      "review": {
+        "state": "community-submitted",
+        "submitted_by": "codevector96"
+      },
+      "schema_status": "machine-readable",
+      "schema_url": "https://api.leoma.ai/openapi.json",
+      "source_urls": [
+        "https://api.leoma.ai/openapi.json",
+        "https://github.com/RendixNetwork/leoma"
+      ],
+      "url": "https://api.leoma.ai/openapi.json"
+    },
+    {
+      "auth_required": false,
+      "authority": "community",
+      "id": "sn-99-leoma-miners-list",
+      "kind": "subnet-api",
+      "name": "Leoma miner registry",
+      "notes": "Public no-auth GET /miners/list on api.leoma.ai returning the SN99 miner registry (uid, hotkey, ...) as JSON. Documented as GET /miners/list in the subnet OpenAPI spec; the higher-detail /miners/all and /miners/valid require a validator-hotkey header and are intentionally not promoted.",
+      "provider": "leoma",
+      "public_safe": true,
+      "review": {
+        "state": "community-submitted",
+        "submitted_by": "codevector96"
+      },
+      "source_urls": [
+        "https://api.leoma.ai/openapi.json",
+        "https://github.com/RendixNetwork/leoma"
+      ],
+      "url": "https://api.leoma.ai/miners/list"
     }
   ]
 }
