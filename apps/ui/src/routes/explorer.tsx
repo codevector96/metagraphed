@@ -81,6 +81,7 @@ function ExplorerPage() {
           "/api/v1/chain/fees",
           "/api/v1/chain/calls",
           "/api/v1/chain/signers",
+          "/api/v1/chain/transfer-pairs",
         ]}
       />
     </AppShell>
@@ -225,8 +226,10 @@ function CallMixSection({ calls }: { calls: ChainCalls }) {
 
 // Ranked sender→receiver native-TAO transfer corridors (#3476), from
 // GET /api/v1/chain/transfer-pairs — top pairs by volume with a relative bar.
+const TOP_TRANSFER_PAIRS = 12;
+
 function TransferPairsSection({ pairs }: { pairs: ChainTransferPairs }) {
-  const rows = pairs.pairs.slice(0, 12);
+  const rows = pairs.pairs.slice(0, TOP_TRANSFER_PAIRS);
   const cap = Math.max(1, ...rows.map((p) => p.volume_tao));
 
   return (
