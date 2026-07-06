@@ -131,6 +131,9 @@ export const R2_ONLY_PATTERNS = [
   // / fee-market aggregates computed live from the extrinsics + blocks D1 tiers at
   // /api/v1/chain/* — never files.
   /^chain\/activity\.json$/,
+  // Decoded chain-event mix (event_kind distribution) computed live from the
+  // account_events D1 tier at /api/v1/chain/event-mix — never a file.
+  /^chain\/event-mix\.json$/,
   /^chain\/calls\.json$/,
   /^chain\/signers\.json$/,
   /^chain\/fees\.json$/,
