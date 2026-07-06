@@ -951,6 +951,31 @@ export interface AccountAxonRemovals {
   subnets: AccountAxonRemovalsSubnet[];
 }
 
+/** Per-subnet NeuronRegistered row in /api/v1/accounts/{ss58}/registrations. */
+export interface AccountRegistrationsSubnet {
+  netuid: number;
+  registrations: number;
+  first_registered_at: string | null;
+  last_registered_at: string | null;
+}
+
+/**
+ * One account's registration (NeuronRegistered) footprint over a 7d/30d/90d
+ * window, from /api/v1/accounts/{ss58}/registrations — the account-level
+ * companion to the subnet-level registration view. Zeroed when the account had
+ * no NeuronRegistered events in the window.
+ */
+export interface AccountRegistrations {
+  schema_version: number;
+  address: string;
+  window: string | null;
+  total_registrations: number;
+  subnet_count: number;
+  concentration: number | null;
+  dominant_netuid: number | null;
+  subnets: AccountRegistrationsSubnet[];
+}
+
 /** Per-subnet WeightsSet row in /api/v1/accounts/{ss58}/weight-setters. */
 export interface AccountWeightSettersSubnet {
   netuid: number;
