@@ -617,9 +617,10 @@ export async function loadChainEventMix(
        ORDER BY count DESC, event_kind ASC`,
       [cutoff],
     ),
-    d1(`SELECT COUNT(*) AS total FROM account_events WHERE observed_at >= ?`, [
-      cutoff,
-    ]),
+    d1(
+      `SELECT COUNT(*) AS total FROM account_events WHERE observed_at >= ? AND event_kind IS NOT NULL`,
+      [cutoff],
+    ),
   ]);
   return buildChainEventMix({
     window: windowLabel,
